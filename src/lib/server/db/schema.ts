@@ -14,10 +14,11 @@ import {
 
 // ---------------------------------------------------------------------------
 // Better Auth core tables (better-auth 1.7.4).
-// Columns are snake_case; Better Auth field mappings must be declared in
-// src/lib/server/auth.ts (Phase 3) via each model's `fields` option.
+// Columns are snake_case; the drizzle adapter receives this schema explicitly
+// in src/lib/server/auth.ts, so no `fields` mappings are needed.
 // PKs are `text` by design: Better Auth's Drizzle adapter expects text ids;
-// values stay UUIDs via `advanced.database.generateId: "uuid"` (Phase 3).
+// values stay UUIDs via a custom `advanced.database.generateId` generator in
+// auth.ts (the PKs carry no database default).
 // App tables use native `uuid` PKs — both styles are intentional, not drift.
 // ---------------------------------------------------------------------------
 
