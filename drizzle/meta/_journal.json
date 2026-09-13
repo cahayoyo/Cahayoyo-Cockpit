@@ -15,6 +15,13 @@
       "when": 1789306041365,
       "tag": "0001_seed_inbox_project",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789307030929,
+      "tag": "0002_rainy_star_brand",
+      "breakpoints": true
     }
   ]
 }
