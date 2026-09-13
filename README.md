@@ -1,42 +1,54 @@
-# sv
+# Cahayoyo Cockpit
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Self-hosted personal dashboard for a QA engineer — bookmarks, notes, tasks, QA utilities, disposable-email tracking, and an encrypted vault in one place.
 
-## Creating a project
+> Status: Phase 1 (scaffold). Modules are built incrementally; the app shell runs, but no features are live yet.
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Stack
 
-```sh
-# create a new project
-npx sv create my-app
-```
+- [SvelteKit](https://svelte.dev/docs/kit) 2 + Svelte 5 (runes) on [Bun](https://bun.sh)
+- Tailwind CSS 4 + [shadcn-svelte](https://shadcn-svelte.com) + `mode-watcher` + `@lucide/svelte`
+- [Drizzle ORM](https://orm.drizzle.team) + PostgreSQL (`drizzle-orm/bun-sql`)
+- [Better Auth](https://www.better-auth.com) (email + password, no public signup)
+- Zod 4
 
-To recreate this project with the same configuration:
+## Requirements
 
-```sh
-# recreate this project
-bun x sv@0.17.0 create --template minimal --types ts --add prettier eslint --install bun .
-```
+- Bun 1.4+
+- PostgreSQL (local instance for development)
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## Setup
 
 ```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+bun install
+cp .env.example .env   # then replace the placeholder values
 ```
 
-## Building
+| Variable               | Purpose                                            |
+| ---------------------- | -------------------------------------------------- |
+| `DATABASE_URL`         | PostgreSQL connection string                       |
+| `BETTER_AUTH_SECRET`   | Session signing secret (`openssl rand -base64 32`) |
+| `VAULT_ENCRYPTION_KEY` | AES-256-GCM key for vault entries (Phase 10)       |
 
-To create a production version of your app:
+## Development
 
 ```sh
-npm run build
+bun run dev     # dev server on http://localhost:5173
+bun run check   # svelte-check (types)
+bun run lint    # prettier + eslint
+bun test        # unit tests (bun:test)
+bun run build   # production build (svelte-adapter-bun)
 ```
 
-You can preview the production build with `npm run preview`.
+## Database
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+Drizzle schema lives in `src/lib/server/db/schema.ts` (populated in Phase 2).
+
+```sh
+bun run db:generate   # generate a migration from the schema
+bun run db:migrate    # apply migrations
+```
+
+## Deployment
+
+Docker container on a Hostinger VPS via Coolify; production deploys from `main` only. Not provisioned yet.
