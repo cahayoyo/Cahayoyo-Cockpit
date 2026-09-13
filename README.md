@@ -1,6 +1,6 @@
 # Cahayoyo Cockpit
 
-Self-hosted personal dashboard for a QA engineer — bookmarks, notes, tasks, QA utilities, disposable-email tracking, and an encrypted vault in one place.
+Self-hosted personal dashboard — bookmarks, notes, tasks, QA utilities, disposable-email tracking, and an encrypted vault in one place.
 
 > Status: Phase 1 (scaffold). Modules are built incrementally; the app shell runs, but no features are live yet.
 
@@ -24,11 +24,10 @@ bun install
 cp .env.example .env   # then replace the placeholder values
 ```
 
-| Variable               | Purpose                                            |
-| ---------------------- | -------------------------------------------------- |
-| `DATABASE_URL`         | PostgreSQL connection string                       |
-| `BETTER_AUTH_SECRET`   | Session signing secret (`openssl rand -base64 32`) |
-| `VAULT_ENCRYPTION_KEY` | AES-256-GCM key for vault entries (Phase 10)       |
+| Variable             | Purpose                                            |
+| -------------------- | -------------------------------------------------- |
+| `DATABASE_URL`       | PostgreSQL connection string                       |
+| `BETTER_AUTH_SECRET` | Session signing secret (`openssl rand -base64 32`) |
 
 ## Development
 
