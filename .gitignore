@@ -28,7 +28,6 @@ vite.config.ts.timestamp-*
 /CONTEXT.md
 .serena/
 
-# Local tooling output + generated config (graphify, codegraph)
+# Local tooling output (graphify, codegraph)
 /graphify-out/
 /.codegraph/
-/.gitattributes
