@@ -28,6 +28,7 @@ vite.config.ts.timestamp-*
 /CONTEXT.md
 .serena/
 
-# Graphify code graph + merge driver (local tooling)
+# Local tooling output + generated config (graphify, codegraph)
 /graphify-out/
+/.codegraph/
 /.gitattributes
