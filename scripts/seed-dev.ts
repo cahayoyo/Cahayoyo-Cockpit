@@ -1,7 +1,5 @@
 import { z } from 'zod';
-// Relative imports on purpose: this script runs outside SvelteKit, where the
-// `$lib` alias is not resolvable.
-import { auth } from '../src/lib/server/auth';
+import { auth } from '$lib/server/auth';
 
 // Dev-only credentials: set them in .env (never committed) — see .env.example.
 const seedEnvSchema = z.object({
@@ -11,19 +9,41 @@ const seedEnvSchema = z.object({
 	SEED_TEST_PASSWORD: z.string().min(12, 'SEED_TEST_PASSWORD must be at least 12 characters')
 });
 
+// Fail-closed allowlist of known dev hosts. Extend it here when the dev
+// database moves; anything unrecognized is refused.
+const DEV_DB_HOSTS = [/^localhost$/, /^127\.0\.0\.1$/, /\.neon\.tech$/];
+
 // The test account must never exist in production (CONSTITUTION, single-tenant).
 function assertDevDatabase(): void {
 	if (process.env.NODE_ENV === 'production') {
 		throw new Error('Refusing to seed: NODE_ENV=production.');
 	}
-	if (/prod/i.test(process.env.DATABASE_URL ?? '')) {
-		throw new Error('Refusing to seed: DATABASE_URL looks like a production database.');
+	let host: string;
+	try {
+		host = new URL(process.env.DATABASE_URL ?? '').hostname;
+	} catch {
+		throw new Error('Refusing to seed: DATABASE_URL is missing or not a valid URL.');
+	}
+	if (!DEV_DB_HOSTS.some((pattern) => pattern.test(host))) {
+		throw new Error(
+			`Refusing to seed: DATABASE_URL host "${host}" is not in the dev allowlist ` +
+				'(DEV_DB_HOSTS in scripts/seed-dev.ts). Extend it only for a real dev database.'
+		);
 	}
 }
 
 assertDevDatabase();
 const env = seedEnvSchema.parse(process.env);
 const ctx = await auth.$context;
+
+async function createCredentialAccount(userId: string, passwordHash: string): Promise<void> {
+	await ctx.internalAdapter.createAccount({
+		userId,
+		accountId: userId,
+		providerId: 'credential',
+		password: passwordHash
+	});
+}
 
 async function upsertSeedUser(
 	email: string,
@@ -38,12 +58,7 @@ async function upsertSeedUser(
 			{ email, name, emailVerified: true },
 			{ method: 'email-password' }
 		);
-		await ctx.internalAdapter.createAccount({
-			userId: user.id,
-			accountId: user.id,
-			providerId: 'credential',
-			password: passwordHash
-		});
+		await createCredentialAccount(user.id, passwordHash);
 		return 'created';
 	}
 
@@ -54,12 +69,7 @@ async function upsertSeedUser(
 	if (credentialAccount) {
 		await ctx.internalAdapter.updateAccount(credentialAccount.id, { password: passwordHash });
 	} else {
-		await ctx.internalAdapter.createAccount({
-			userId: existing.user.id,
-			accountId: existing.user.id,
-			providerId: 'credential',
-			password: passwordHash
-		});
+		await createCredentialAccount(existing.user.id, passwordHash);
 	}
 	return 'updated';
 }
