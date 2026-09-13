@@ -36,21 +36,23 @@
 	let navOpen = $state(false);
 	let signOutForm: HTMLFormElement | null = $state(null);
 
-	const current = $derived(navItems.find((item) => item.href === page.url.pathname) ?? navItems[0]);
+	const current = $derived(navItems.find((item) => isActive(item.href)) ?? navItems[0]);
 
 	function isActive(href: string): boolean {
-		return page.url.pathname === href;
+		const path = page.url.pathname;
+		return path === href || (href !== '/' && path.startsWith(`${href}/`));
 	}
 </script>
 
 {#snippet navLinks()}
 	{#each navItems as item (item.href)}
+		{@const active = isActive(item.href)}
 		<a
 			href={resolve(item.href)}
-			aria-current={isActive(item.href) ? 'page' : undefined}
+			aria-current={active ? 'page' : undefined}
 			class={cn(
-				'flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
-				isActive(item.href)
+				'flex min-h-11 w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors motion-reduce:transition-none',
+				active
 					? 'bg-sidebar-accent text-sidebar-accent-foreground'
 					: 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
 			)}
@@ -66,7 +68,7 @@
 	<DropdownMenu.Root>
 		<DropdownMenu.Trigger>
 			{#snippet child({ props })}
-				<Button variant="ghost" size="sm" class="gap-2" {...props}>
+				<Button variant="ghost" size="sm" class="min-h-11 gap-2 sm:min-h-7" {...props}>
 					<span
 						class="grid size-6 shrink-0 place-items-center rounded-full bg-muted text-xs font-medium"
 					>
@@ -95,6 +97,7 @@
 		<Button
 			variant="ghost"
 			size="icon-sm"
+			class="size-11 sm:size-7"
 			aria-label="Open navigation"
 			onclick={() => (navOpen = true)}
 		>
@@ -107,7 +110,13 @@
 		</div>
 		<span class="hidden text-sm font-semibold sm:inline">Cahayoyo Cockpit</span>
 		<h1 class="min-w-0 flex-1 truncate text-lg font-semibold">{current.label}</h1>
-		<Button variant="ghost" size="icon-sm" aria-label="Toggle theme" onclick={toggleMode}>
+		<Button
+			variant="ghost"
+			size="icon-sm"
+			class="size-11 sm:size-7"
+			aria-label="Toggle theme"
+			onclick={toggleMode}
+		>
 			<Moon class="dark:hidden" />
 			<Sun class="hidden dark:block" />
 		</Button>
