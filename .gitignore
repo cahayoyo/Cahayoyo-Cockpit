@@ -27,3 +27,7 @@ vite.config.ts.timestamp-*
 /AGENTS.md
 /CONTEXT.md
 .serena/
+
+# Graphify code graph + merge driver (local tooling)
+/graphify-out/
+/.gitattributes
