@@ -96,6 +96,7 @@
 	count={items.length}
 	onnew={openCreate}
 	onview={setView}
+	onreset={clearFilters}
 />
 
 {#if items.length === 0}

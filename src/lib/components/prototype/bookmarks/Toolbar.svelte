@@ -3,6 +3,7 @@
 	import LayoutGrid from '@lucide/svelte/icons/layout-grid';
 	import List from '@lucide/svelte/icons/list';
 	import Plus from '@lucide/svelte/icons/plus';
+	import RotateCcw from '@lucide/svelte/icons/rotate-ccw';
 	import Search from '@lucide/svelte/icons/search';
 	import Star from '@lucide/svelte/icons/star';
 	import { Button } from '$lib/components/ui/button/index.js';
@@ -25,7 +26,8 @@
 		tags,
 		count,
 		onnew,
-		onview
+		onview,
+		onreset
 	}: {
 		q?: string;
 		favorite?: boolean;
@@ -36,10 +38,14 @@
 		count: number;
 		onnew: () => void;
 		onview: (view: string) => void;
+		onreset: () => void;
 	} = $props();
 
 	const tagLabel = $derived(tag === 'all' ? 'All tags' : tag);
 	const sortLabel = $derived(sort === 'title' ? 'Title A–Z' : 'Newest first');
+	const filtersActive = $derived(
+		q.trim().length > 0 || favorite || tag !== 'all' || sort !== 'newest'
+	);
 </script>
 
 <div class="flex flex-col gap-3">
@@ -82,6 +88,17 @@
 				<Select.Item value="title" label="Title A–Z">Title A–Z</Select.Item>
 			</Select.Content>
 		</Select.Root>
+
+		<Button
+			variant="ghost"
+			size="icon-sm"
+			disabled={!filtersActive}
+			aria-label="Reset filters"
+			title="Reset filters"
+			onclick={onreset}
+		>
+			<RotateCcw class="size-4" />
+		</Button>
 
 		<div class="hidden flex-1 sm:block"></div>
 
