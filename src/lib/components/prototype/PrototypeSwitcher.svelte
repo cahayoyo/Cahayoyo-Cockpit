@@ -1,6 +1,6 @@
 <script lang="ts">
 	// Dev-only floating switcher for UI prototypes. Rebuilt per prototype branch.
-	import { replaceState } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
@@ -21,7 +21,11 @@
 
 	function cycle(step: number): void {
 		const next = variants[(index + step + variants.length) % variants.length].key;
-		replaceState(resolve(`/bookmarks?variant=${next}`), {});
+		void goto(resolve(`/bookmarks?variant=${next}`), {
+			replaceState: true,
+			noScroll: true,
+			keepFocus: true
+		});
 	}
 
 	function onKeydown(event: KeyboardEvent): void {
