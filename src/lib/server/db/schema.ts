@@ -127,6 +127,9 @@ export const media = pgTable('media', {
 export const folder = pgTable('folder', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	name: text('name').notNull(),
+	// Virtual-root tree: top-level folders have parent_id NULL; deleting a folder
+	// cascades to its subtree while contained bookmarks are unfiled via SET NULL.
+	parentId: uuid('parent_id').references((): AnyPgColumn => folder.id, { onDelete: 'cascade' }),
 	createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
 });
 
@@ -137,6 +140,7 @@ export const bookmark = pgTable('bookmark', {
 	description: text('description'),
 	favorite: boolean('favorite').default(false).notNull(),
 	imageId: uuid('image_id').references(() => media.id, { onDelete: 'restrict' }),
+	folderId: uuid('folder_id').references(() => folder.id, { onDelete: 'set null' }),
 	createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
 });
 
