@@ -13,7 +13,7 @@
 	let hovering = $state(false);
 
 	const path = $derived(page.url.pathname);
-	const pageTitle = $derived(`CahayoyoCockpit-${currentLabel(path)}`);
+	const pageTitle = $derived(`Cahayoyo Cockpit - ${currentLabel(path)}`);
 
 	function toggleSidebar(): void {
 		expanded = !expanded;

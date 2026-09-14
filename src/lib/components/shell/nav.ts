@@ -7,7 +7,7 @@ import SquareCheckBig from '@lucide/svelte/icons/square-check-big';
 import Wrench from '@lucide/svelte/icons/wrench';
 
 export const NAV_ITEMS = [
-	{ href: '/', label: 'Home', icon: House },
+	{ href: '/', label: 'Cockpit', icon: House },
 	{ href: '/bookmarks', label: 'Bookmarks', icon: Bookmark },
 	{ href: '/notes', label: 'Notes', icon: NotebookPen },
 	{ href: '/tasks', label: 'Tasks', icon: SquareCheckBig },

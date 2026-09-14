@@ -24,11 +24,11 @@ describe('isActivePath', () => {
 
 describe('currentLabel', () => {
 	test('resolves the active section, including nested paths', () => {
-		expect(currentLabel('/')).toBe('Home');
+		expect(currentLabel('/')).toBe('Cockpit');
 		expect(currentLabel('/vault/items')).toBe('Vault');
 	});
 
 	test('falls back to Home for unknown paths', () => {
-		expect(currentLabel('/nope')).toBe('Home');
+		expect(currentLabel('/nope')).toBe('Cockpit');
 	});
 });

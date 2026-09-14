@@ -20,7 +20,7 @@
 </script>
 
 <svelte:head>
-	<title>CahayoyoCockpit-Login</title>
+	<title>Cahayoyo Cockpit - Login</title>
 </svelte:head>
 
 <main class="relative grid min-h-svh place-items-center overflow-hidden bg-accent px-4 py-10">
