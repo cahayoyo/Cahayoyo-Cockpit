@@ -19,6 +19,10 @@
 	const isDark = $derived(mode.current === 'dark');
 </script>
 
+<svelte:head>
+	<title>CahayoyoCockpit-Login</title>
+</svelte:head>
+
 <main class="relative grid min-h-svh place-items-center overflow-hidden bg-accent px-4 py-10">
 	<div
 		class="pointer-events-none absolute -top-24 -left-24 size-96 rounded-full bg-primary/30 blur-3xl"

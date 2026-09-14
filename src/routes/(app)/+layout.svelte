@@ -13,12 +13,17 @@
 	let hovering = $state(false);
 
 	const path = $derived(page.url.pathname);
+	const pageTitle = $derived(`CahayoyoCockpit-${currentLabel(path)}`);
 
 	function toggleSidebar(): void {
 		expanded = !expanded;
 		hovering = false;
 	}
 </script>
+
+<svelte:head>
+	<title>{pageTitle}</title>
+</svelte:head>
 
 <div class="flex min-h-svh bg-background">
 	<Sidebar bind:expanded bind:hovering />

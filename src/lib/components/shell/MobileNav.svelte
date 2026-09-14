@@ -16,12 +16,12 @@
 			<img
 				src="/logo/cahayoyo-logo-transparant.png"
 				alt="Cahayoyo"
-				class="h-12 w-auto dark:hidden"
+				class="h-12 w-auto self-start dark:hidden"
 			/>
 			<img
 				src="/logo/cahayoyo-logo-inverse.png"
 				alt="Cahayoyo"
-				class="hidden h-12 w-auto dark:block"
+				class="hidden h-12 w-auto self-start dark:block"
 			/>
 			<Sheet.Title class="sr-only">Navigation</Sheet.Title>
 		</Sheet.Header>
