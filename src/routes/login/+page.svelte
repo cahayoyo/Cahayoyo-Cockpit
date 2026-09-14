@@ -63,12 +63,12 @@
 		</button>
 
 		<img
-			src="/cahayoyo-cockpit-logo-transparant.png"
+			src="/logo/cahayoyo-cockpit-logo-transparant.png"
 			alt="Cahayoyo Cockpit"
 			class="mx-auto h-36 w-auto sm:h-40 dark:hidden"
 		/>
 		<img
-			src="/cahayoyo-cockpit-logo-inverse.png"
+			src="/logo/cahayoyo-cockpit-logo-inverse.png"
 			alt="Cahayoyo Cockpit"
 			class="mx-auto hidden h-36 w-auto sm:h-40 dark:block"
 		/>

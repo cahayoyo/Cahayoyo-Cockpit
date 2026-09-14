@@ -133,8 +133,16 @@
 <Sheet.Root bind:open={navOpen}>
 	<Sheet.Content side="left" class="w-72 bg-sidebar text-sidebar-foreground">
 		<Sheet.Header class="gap-3">
-			<img src="/cahayoyo-logo-transparant.png" alt="Cahayoyo" class="h-12 w-auto dark:hidden" />
-			<img src="/cahayoyo-logo-inverse.png" alt="Cahayoyo" class="hidden h-12 w-auto dark:block" />
+			<img
+				src="/logo/cahayoyo-logo-transparant.png"
+				alt="Cahayoyo"
+				class="h-12 w-auto dark:hidden"
+			/>
+			<img
+				src="/logo/cahayoyo-logo-inverse.png"
+				alt="Cahayoyo"
+				class="hidden h-12 w-auto dark:block"
+			/>
 			<Sheet.Title class="sr-only">Navigation</Sheet.Title>
 		</Sheet.Header>
 		<nav class="flex-1 space-y-1 px-2" aria-label="Main">
