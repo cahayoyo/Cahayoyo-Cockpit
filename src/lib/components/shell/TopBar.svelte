@@ -36,6 +36,19 @@
 		<Menu />
 	</Button>
 
+	<div class="flex shrink-0 items-center gap-2 lg:hidden">
+		<img
+			src="/logo/cahayoyo-logo-transparant.png"
+			alt="Cahayoyo Cockpit"
+			class="h-7 w-auto dark:hidden"
+		/>
+		<img
+			src="/logo/cahayoyo-logo-inverse.png"
+			alt="Cahayoyo Cockpit"
+			class="hidden h-7 w-auto dark:block"
+		/>
+	</div>
+
 	<Button
 		variant="ghost"
 		size="icon-sm"

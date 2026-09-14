@@ -1,13 +1,13 @@
 import Bookmark from '@lucide/svelte/icons/bookmark';
-import House from '@lucide/svelte/icons/house';
 import Lock from '@lucide/svelte/icons/lock';
 import Mail from '@lucide/svelte/icons/mail';
 import NotebookPen from '@lucide/svelte/icons/notebook-pen';
+import Plane from '@lucide/svelte/icons/plane';
 import SquareCheckBig from '@lucide/svelte/icons/square-check-big';
 import Wrench from '@lucide/svelte/icons/wrench';
 
 export const NAV_ITEMS = [
-	{ href: '/', label: 'Cockpit', icon: House },
+	{ href: '/', label: 'Cockpit', icon: Plane },
 	{ href: '/bookmarks', label: 'Bookmarks', icon: Bookmark },
 	{ href: '/notes', label: 'Notes', icon: NotebookPen },
 	{ href: '/tasks', label: 'Tasks', icon: SquareCheckBig },
