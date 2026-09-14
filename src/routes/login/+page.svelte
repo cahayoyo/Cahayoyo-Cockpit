@@ -63,9 +63,14 @@
 		</button>
 
 		<img
-			src="/cahayoyo-cockpit-logo.png"
+			src="/cahayoyo-cockpit-logo-transparant.png"
 			alt="Cahayoyo Cockpit"
-			class="mx-auto h-36 w-auto rounded-lg sm:h-40"
+			class="mx-auto h-36 w-auto sm:h-40 dark:hidden"
+		/>
+		<img
+			src="/cahayoyo-cockpit-logo-inverse.png"
+			alt="Cahayoyo Cockpit"
+			class="mx-auto hidden h-36 w-auto sm:h-40 dark:block"
 		/>
 
 		<div class="space-y-6">
