@@ -1,9 +1,9 @@
 <script lang="ts">
-	// Variant B — Compact: dense 4-column grid, square thumbnails, tags as plain text.
+	// View mode: Grid — dense 4-column grid, square thumbnails, tags as plain text.
 	import CardActions from './CardActions.svelte';
-	import { fallbackLetter, type VariantProps } from './data.js';
+	import { fallbackLetter, type ViewProps } from './data.js';
 
-	let { items, onToggleFavorite, onEdit, onDelete }: VariantProps = $props();
+	let { items, onToggleFavorite, onEdit, onDelete }: ViewProps = $props();
 </script>
 
 <div class="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4">

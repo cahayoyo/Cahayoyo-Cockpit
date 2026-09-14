@@ -1,4 +1,7 @@
 <script lang="ts">
+	import Columns2 from '@lucide/svelte/icons/columns-2';
+	import LayoutGrid from '@lucide/svelte/icons/layout-grid';
+	import List from '@lucide/svelte/icons/list';
 	import Plus from '@lucide/svelte/icons/plus';
 	import Search from '@lucide/svelte/icons/search';
 	import Star from '@lucide/svelte/icons/star';
@@ -7,22 +10,32 @@
 	import * as Select from '$lib/components/ui/select/index.js';
 	import { cn } from '$lib/utils.js';
 
+	const VIEWS = [
+		{ key: 'grid', label: 'Grid view', icon: LayoutGrid },
+		{ key: 'editorial', label: 'Editorial view', icon: Columns2 },
+		{ key: 'list', label: 'List view', icon: List }
+	] as const;
+
 	let {
 		q = $bindable(''),
 		favorite = $bindable(false),
 		tag = $bindable('all'),
 		sort = $bindable('newest'),
+		view = 'grid',
 		tags,
 		count,
-		onnew
+		onnew,
+		onview
 	}: {
 		q?: string;
 		favorite?: boolean;
 		tag?: string;
 		sort?: string;
+		view?: string;
 		tags: string[];
 		count: number;
 		onnew: () => void;
+		onview: (view: string) => void;
 	} = $props();
 
 	const tagLabel = $derived(tag === 'all' ? 'All tags' : tag);
@@ -71,6 +84,25 @@
 		</Select.Root>
 
 		<div class="hidden flex-1 sm:block"></div>
+
+		<div
+			class="flex items-center gap-0.5 rounded-lg border border-border p-0.5"
+			role="group"
+			aria-label="View"
+		>
+			{#each VIEWS as v (v.key)}
+				<Button
+					variant={view === v.key ? 'secondary' : 'ghost'}
+					size="icon-sm"
+					aria-label={v.label}
+					title={v.label}
+					aria-pressed={view === v.key}
+					onclick={() => onview(v.key)}
+				>
+					<v.icon class="size-4" />
+				</Button>
+			{/each}
+		</div>
 
 		<Button onclick={onnew}>
 			<Plus />

@@ -1,16 +1,16 @@
 <script lang="ts">
-	// PROTOTYPE (branch `prototype/bookmarks`) — 5 card-grid variants behind `?variant=`.
-	// Replace the real page on this branch only; nothing here ships.
+	// PROTOTYPE (branch `prototype/bookmarks`) — 3 view modes (grid / editorial / list)
+	// behind `?view=`, plus one editor dialog and one media picker. Nothing here ships.
 	import SearchX from '@lucide/svelte/icons/search-x';
+	import type { Component } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
-	import PrototypeSwitcher from '$lib/components/prototype/PrototypeSwitcher.svelte';
 	import BookmarkEditorDialog from '$lib/components/prototype/bookmarks/BookmarkEditorDialog.svelte';
+	import BookmarkEditorial from '$lib/components/prototype/bookmarks/BookmarkEditorial.svelte';
+	import BookmarkGrid from '$lib/components/prototype/bookmarks/BookmarkGrid.svelte';
+	import BookmarkList from '$lib/components/prototype/bookmarks/BookmarkList.svelte';
 	import Toolbar from '$lib/components/prototype/bookmarks/Toolbar.svelte';
-	import VariantA from '$lib/components/prototype/bookmarks/VariantA.svelte';
-	import VariantB from '$lib/components/prototype/bookmarks/VariantB.svelte';
-	import VariantC from '$lib/components/prototype/bookmarks/VariantC.svelte';
-	import VariantD from '$lib/components/prototype/bookmarks/VariantD.svelte';
-	import VariantE from '$lib/components/prototype/bookmarks/VariantE.svelte';
 	import {
 		ALL_TAGS,
 		BOOKMARKS,
@@ -19,17 +19,16 @@
 		withImages,
 		type PrototypeBookmark,
 		type PrototypeMedia,
-		type SortKey
+		type SortKey,
+		type ViewProps
 	} from '$lib/components/prototype/bookmarks/data.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 
-	const VARIANTS = [
-		{ key: 'a', name: 'Showcase grid', component: VariantA },
-		{ key: 'b', name: 'Compact grid', component: VariantB },
-		{ key: 'c', name: 'Dense rows', component: VariantC },
-		{ key: 'd', name: 'Image tiles', component: VariantD },
-		{ key: 'e', name: 'Editorial split', component: VariantE }
-	];
+	const VIEWS: Record<string, Component<ViewProps>> = {
+		grid: BookmarkGrid,
+		editorial: BookmarkEditorial,
+		list: BookmarkList
+	};
 
 	let bookmarks = $state<PrototypeBookmark[]>(structuredClone(BOOKMARKS));
 	let media = $state<PrototypeMedia[]>(structuredClone(MEDIA));
@@ -42,12 +41,20 @@
 	let editorOpen = $state(false);
 	let editing = $state<PrototypeBookmark | null>(null);
 
+	const view = $derived(page.url.searchParams.get('view') ?? 'grid');
+	const activeView = $derived(VIEWS[view] ?? VIEWS.grid);
+
 	const sortKey = $derived<SortKey>(sort === 'title' ? 'title' : 'newest');
 	const items = $derived(withImages(filterBookmarks(bookmarks, q, favorite, tag, sortKey), media));
 	const usage = $derived((id: string) => bookmarks.filter((b) => b.imageId === id).length);
 
-	const variantKey = $derived(page.url.searchParams.get('variant') ?? VARIANTS[0].key);
-	const variant = $derived(VARIANTS.find((v) => v.key === variantKey) ?? VARIANTS[0]);
+	function setView(next: string): void {
+		void goto(resolve(`/bookmarks?view=${next}`), {
+			replaceState: true,
+			noScroll: true,
+			keepFocus: true
+		});
+	}
 
 	function openCreate(): void {
 		editing = null;
@@ -84,9 +91,11 @@
 	bind:favorite
 	bind:tag
 	bind:sort
+	{view}
 	tags={ALL_TAGS}
 	count={items.length}
 	onnew={openCreate}
+	onview={setView}
 />
 
 {#if items.length === 0}
@@ -98,8 +107,8 @@
 		<Button variant="outline" size="sm" onclick={clearFilters}>Clear filters</Button>
 	</div>
 {:else}
-	{@const ActiveVariant = variant.component}
-	<ActiveVariant
+	{@const ActiveView = activeView}
+	<ActiveView
 		{items}
 		onToggleFavorite={toggleFavorite}
 		onEdit={openEdit}
@@ -115,5 +124,3 @@
 	{usage}
 	onsave={saveBookmark}
 />
-
-<PrototypeSwitcher variants={VARIANTS.map(({ key, name }) => ({ key, name }))} />

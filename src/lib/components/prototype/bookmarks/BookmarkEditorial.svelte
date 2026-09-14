@@ -1,10 +1,10 @@
 <script lang="ts">
-	// Variant E — Editorial: two wide split cards per row, large side thumbnail.
+	// View mode: Editorial — two wide split cards per row, large side thumbnail.
 	import CardActions from './CardActions.svelte';
 	import { Badge } from '$lib/components/ui/badge/index.js';
-	import { fallbackLetter, hostname, type VariantProps } from './data.js';
+	import { fallbackLetter, hostname, type ViewProps } from './data.js';
 
-	let { items, onToggleFavorite, onEdit, onDelete }: VariantProps = $props();
+	let { items, onToggleFavorite, onEdit, onDelete }: ViewProps = $props();
 </script>
 
 <div class="grid gap-4 lg:grid-cols-2">

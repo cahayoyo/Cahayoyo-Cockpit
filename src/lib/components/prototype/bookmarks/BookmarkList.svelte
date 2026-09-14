@@ -1,10 +1,10 @@
 <script lang="ts">
-	// Variant C — Rows: dense list-hybrid, one row per bookmark, maximum density.
+	// View mode: List — dense rows, one bookmark per line, maximum density.
 	import CardActions from './CardActions.svelte';
 	import { Badge } from '$lib/components/ui/badge/index.js';
-	import { fallbackLetter, hostname, type VariantProps } from './data.js';
+	import { fallbackLetter, hostname, type ViewProps } from './data.js';
 
-	let { items, onToggleFavorite, onEdit, onDelete }: VariantProps = $props();
+	let { items, onToggleFavorite, onEdit, onDelete }: ViewProps = $props();
 </script>
 
 <div

@@ -21,7 +21,7 @@ export type PrototypeBookmark = {
 
 export type BookmarkView = PrototypeBookmark & { image: PrototypeMedia | null };
 
-export type VariantProps = {
+export type ViewProps = {
 	items: BookmarkView[];
 	onToggleFavorite: (id: string) => void;
 	onEdit: (bookmark: PrototypeBookmark) => void;
