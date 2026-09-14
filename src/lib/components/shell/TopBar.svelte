@@ -78,7 +78,7 @@
 
 	{#if now}
 		<time
-			class="hidden text-sm text-muted-foreground tabular-nums md:inline"
+			class="hidden text-xs text-muted-foreground tabular-nums md:inline"
 			datetime={now.toISOString()}
 		>
 			{formatClock(now)}
