@@ -10,5 +10,5 @@
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
-<ModeWatcher />
+<ModeWatcher disableTransitions={false} />
 {@render children()}
