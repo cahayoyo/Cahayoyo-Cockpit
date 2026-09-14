@@ -6,9 +6,11 @@
 	import PanelLeftClose from '@lucide/svelte/icons/panel-left-close';
 	import PanelLeftOpen from '@lucide/svelte/icons/panel-left-open';
 	import Sun from '@lucide/svelte/icons/sun';
+	import { onMount } from 'svelte';
 	import { toggleMode } from 'mode-watcher';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
+	import { formatClock } from './clock.js';
 
 	let {
 		email,
@@ -23,6 +25,13 @@
 	} = $props();
 
 	let signOutForm: HTMLFormElement | null = $state(null);
+	let now = $state<Date | null>(null);
+
+	onMount(() => {
+		now = new Date();
+		const id = setInterval(() => (now = new Date()), 1000);
+		return () => clearInterval(id);
+	});
 </script>
 
 <header class="flex h-14 items-center gap-2 border-b border-border px-4">
@@ -40,12 +49,12 @@
 		<img
 			src="/logo/cahayoyo-logo-transparant.png"
 			alt="Cahayoyo Cockpit"
-			class="h-7 w-auto dark:hidden"
+			class="h-10 w-auto dark:hidden"
 		/>
 		<img
 			src="/logo/cahayoyo-logo-inverse.png"
 			alt="Cahayoyo Cockpit"
-			class="hidden h-7 w-auto dark:block"
+			class="hidden h-10 w-auto dark:block"
 		/>
 	</div>
 
@@ -66,6 +75,15 @@
 	</Button>
 
 	<div class="flex-1"></div>
+
+	{#if now}
+		<time
+			class="hidden text-sm text-muted-foreground tabular-nums md:inline"
+			datetime={now.toISOString()}
+		>
+			{formatClock(now)}
+		</time>
+	{/if}
 
 	<Button
 		variant="ghost"
