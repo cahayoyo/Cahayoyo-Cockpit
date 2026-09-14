@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import CircleAlert from '@lucide/svelte/icons/circle-alert';
+	import Eye from '@lucide/svelte/icons/eye';
+	import EyeOff from '@lucide/svelte/icons/eye-off';
 	import LoaderCircle from '@lucide/svelte/icons/loader-circle';
 	import Moon from '@lucide/svelte/icons/moon';
 	import Sun from '@lucide/svelte/icons/sun';
@@ -12,6 +14,7 @@
 	let { form }: PageProps = $props();
 
 	let submitting = $state(false);
+	let showPassword = $state(false);
 	const isDark = $derived(mode.current === 'dark');
 </script>
 
@@ -105,13 +108,29 @@
 				</div>
 				<div class="space-y-2">
 					<Label for="login-password">Password</Label>
-					<Input
-						id="login-password"
-						name="password"
-						type="password"
-						autocomplete="current-password"
-						required
-					/>
+					<div class="relative">
+						<Input
+							id="login-password"
+							name="password"
+							type={showPassword ? 'text' : 'password'}
+							autocomplete="current-password"
+							class="pr-9"
+							required
+						/>
+						<button
+							type="button"
+							aria-label={showPassword ? 'Hide password' : 'Show password'}
+							aria-pressed={showPassword}
+							onclick={() => (showPassword = !showPassword)}
+							class="absolute inset-y-0 right-0 grid w-9 place-items-center rounded-r-lg text-muted-foreground hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+						>
+							{#if showPassword}
+								<EyeOff class="size-4" />
+							{:else}
+								<Eye class="size-4" />
+							{/if}
+						</button>
+					</div>
 				</div>
 				<button
 					type="submit"
