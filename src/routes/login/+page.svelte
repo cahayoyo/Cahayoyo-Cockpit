@@ -7,6 +7,7 @@
 	import Moon from '@lucide/svelte/icons/moon';
 	import Sun from '@lucide/svelte/icons/sun';
 	import { mode, toggleMode } from 'mode-watcher';
+	import { Button } from '$lib/components/ui/button/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
 	import type { PageProps } from './$types.js';
@@ -38,7 +39,7 @@
 			aria-checked={isDark}
 			aria-label="Toggle dark mode"
 			onclick={toggleMode}
-			class="absolute top-3 right-3 inline-flex h-6 w-11 items-center rounded-full border border-border bg-muted px-0.5 transition-colors before:absolute before:-inset-2 before:content-[''] motion-reduce:transition-none"
+			class="absolute top-3 right-3 inline-flex h-6 w-11 items-center rounded-full border border-border bg-muted px-0.5 transition-colors before:absolute before:-inset-2.5 before:content-[''] motion-reduce:transition-none"
 		>
 			<span
 				class="relative grid size-5 place-items-center rounded-full bg-background shadow-sm transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] motion-reduce:transition-none {isDark
@@ -46,14 +47,14 @@
 					: ''}"
 			>
 				<span
-					class="absolute grid size-full place-items-center transition-all duration-300 motion-reduce:transition-none {isDark
+					class="absolute grid size-full place-items-center transition-[transform,opacity] duration-300 motion-reduce:transition-none {isDark
 						? '-rotate-90 scale-0 opacity-0'
 						: 'rotate-0 scale-100 opacity-100'}"
 				>
 					<Sun class="size-3 text-foreground" />
 				</span>
 				<span
-					class="absolute grid size-full place-items-center transition-all duration-300 motion-reduce:transition-none {isDark
+					class="absolute grid size-full place-items-center transition-[transform,opacity] duration-300 motion-reduce:transition-none {isDark
 						? 'rotate-0 scale-100 opacity-100'
 						: 'rotate-90 scale-0 opacity-0'}"
 				>
@@ -122,25 +123,27 @@
 							class="pr-9"
 							required
 						/>
-						<button
+						<Button
 							type="button"
+							variant="ghost"
+							size="icon-sm"
 							aria-label={showPassword ? 'Hide password' : 'Show password'}
 							aria-pressed={showPassword}
 							onclick={() => (showPassword = !showPassword)}
-							class="absolute inset-y-0 right-0 grid w-9 place-items-center rounded-r-lg text-muted-foreground hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+							class="absolute inset-y-0 right-0 h-8 w-9 rounded-l-none rounded-r-lg text-muted-foreground before:absolute before:-inset-1.5 before:content-['']"
 						>
 							{#if showPassword}
 								<EyeOff class="size-4" />
 							{:else}
 								<Eye class="size-4" />
 							{/if}
-						</button>
+						</Button>
 					</div>
 				</div>
 				<button
 					type="submit"
 					disabled={submitting}
-					class="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-linear-to-r from-primary via-blue-600 to-indigo-500 text-sm font-medium text-primary-foreground shadow-[0_4px_0_oklch(0.32_0.14_262)] transition-all hover:brightness-110 active:translate-y-1 active:shadow-[0_1px_0_oklch(0.32_0.14_262)] focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none"
+					class="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-linear-to-r from-primary via-blue-600 to-indigo-500 text-sm font-medium text-primary-foreground shadow-[0_4px_0_oklch(0.32_0.14_262)] transition-transform hover:brightness-110 active:translate-y-1 active:shadow-[0_1px_0_oklch(0.32_0.14_262)] focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none"
 				>
 					{#if submitting}
 						<LoaderCircle class="size-4 animate-spin" />

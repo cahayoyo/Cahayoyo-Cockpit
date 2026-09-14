@@ -4,7 +4,6 @@
 	import Bookmark from '@lucide/svelte/icons/bookmark';
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
 	import House from '@lucide/svelte/icons/house';
-	import LayoutDashboard from '@lucide/svelte/icons/layout-dashboard';
 	import Lock from '@lucide/svelte/icons/lock';
 	import LogOut from '@lucide/svelte/icons/log-out';
 	import Mail from '@lucide/svelte/icons/mail';
@@ -103,10 +102,8 @@
 		>
 			<Menu />
 		</Button>
-		<div
-			class="grid size-8 shrink-0 place-items-center rounded-md bg-primary text-primary-foreground"
-		>
-			<LayoutDashboard class="size-4" />
+		<div class="grid size-8 shrink-0 place-items-center rounded-md bg-primary">
+			<img src="/logo/cahayoyo-mark.png" alt="" class="size-5 brightness-0 invert" />
 		</div>
 		<span class="hidden text-sm font-semibold sm:inline">Cahayoyo Cockpit</span>
 		<h1 class="min-w-0 flex-1 truncate text-lg font-semibold">{current.label}</h1>
