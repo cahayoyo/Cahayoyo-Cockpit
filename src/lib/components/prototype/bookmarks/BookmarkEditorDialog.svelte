@@ -8,13 +8,15 @@
 	import { Label } from '$lib/components/ui/label/index.js';
 	import { Textarea } from '$lib/components/ui/textarea/index.js';
 	import { cn } from '$lib/utils.js';
+	import FolderPicker from './FolderPicker.svelte';
 	import MediaPickerDialog from './MediaPickerDialog.svelte';
-	import type { PrototypeBookmark, PrototypeMedia } from './data.js';
+	import type { PrototypeBookmark, PrototypeFolder, PrototypeMedia } from './data.js';
 
 	let {
 		open = $bindable(false),
 		bookmark = null,
 		media = $bindable<PrototypeMedia[]>([]),
+		folders,
 		tags,
 		usage,
 		onsave
@@ -22,6 +24,7 @@
 		open?: boolean;
 		bookmark?: PrototypeBookmark | null;
 		media?: PrototypeMedia[];
+		folders: PrototypeFolder[];
 		tags: string[];
 		usage: (id: string) => number;
 		onsave: (bookmark: PrototypeBookmark) => void;
@@ -32,6 +35,7 @@
 		url: string;
 		description: string;
 		tagsText: string;
+		folderId: string;
 		favorite: boolean;
 	};
 
@@ -40,6 +44,7 @@
 		url: '',
 		description: '',
 		tagsText: '',
+		folderId: 'none',
 		favorite: false
 	});
 	let imageId = $state<string | null>(null);
@@ -53,9 +58,10 @@
 					url: bookmark.url,
 					description: bookmark.description,
 					tagsText: bookmark.tags.join(', '),
+					folderId: bookmark.folderId ?? 'none',
 					favorite: bookmark.favorite
 				}
-			: { title: '', url: '', description: '', tagsText: '', favorite: false };
+			: { title: '', url: '', description: '', tagsText: '', folderId: 'none', favorite: false };
 		imageId = bookmark?.imageId ?? null;
 	});
 
@@ -86,6 +92,7 @@
 			favorite: draft.favorite,
 			createdAt: bookmark?.createdAt ?? new Date().toISOString(),
 			imageId,
+			folderId: draft.folderId === 'none' ? null : draft.folderId,
 			tags: parsedTags
 		});
 		open = false;
@@ -143,6 +150,17 @@
 					{/each}
 				</datalist>
 				<p class="text-xs text-muted-foreground">Comma-separated; type to reuse an existing tag.</p>
+			</div>
+
+			<div class="space-y-2">
+				<span class="text-sm font-medium">Folder</span>
+				<FolderPicker
+					bind:value={draft.folderId}
+					{folders}
+					empty={{ value: 'none', label: 'No folder' }}
+					label="Folder"
+					class="w-full"
+				/>
 			</div>
 
 			<div class="flex flex-wrap items-center gap-2">

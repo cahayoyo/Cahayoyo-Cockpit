@@ -16,8 +16,25 @@ export type PrototypeBookmark = {
 	favorite: boolean;
 	createdAt: string;
 	imageId: string | null;
+	folderId: string | null;
 	tags: string[];
 };
+
+export type PrototypeFolder = {
+	id: string;
+	name: string;
+	parentId: string | null;
+};
+
+export const FOLDERS: PrototypeFolder[] = [
+	{ id: 'f1', name: 'qa', parentId: null },
+	{ id: 'f2', name: 'automation', parentId: 'f1' },
+	{ id: 'f3', name: 'manual', parentId: 'f1' },
+	{ id: 'f4', name: 'devops', parentId: null },
+	{ id: 'f5', name: 'infra', parentId: 'f4' },
+	{ id: 'f6', name: 'ci', parentId: 'f4' },
+	{ id: 'f7', name: 'docs', parentId: null }
+];
 
 export type BookmarkView = PrototypeBookmark & { image: PrototypeMedia | null };
 
@@ -76,6 +93,7 @@ export const BOOKMARKS: PrototypeBookmark[] = [
 		favorite: true,
 		createdAt: '2026-09-12T09:20:00Z',
 		imageId: 'm1',
+		folderId: 'f7',
 		tags: ['svelte', 'docs']
 	},
 	{
@@ -86,6 +104,7 @@ export const BOOKMARKS: PrototypeBookmark[] = [
 		favorite: true,
 		createdAt: '2026-09-10T14:05:00Z',
 		imageId: 'm2',
+		folderId: 'f4',
 		tags: ['db', 'docs']
 	},
 	{
@@ -96,6 +115,7 @@ export const BOOKMARKS: PrototypeBookmark[] = [
 		favorite: false,
 		createdAt: '2026-09-08T07:40:00Z',
 		imageId: 'm3',
+		folderId: 'f2',
 		tags: ['qa', 'testing']
 	},
 	{
@@ -106,6 +126,7 @@ export const BOOKMARKS: PrototypeBookmark[] = [
 		favorite: false,
 		createdAt: '2026-09-05T16:30:00Z',
 		imageId: 'm4',
+		folderId: 'f7',
 		tags: ['css', 'docs']
 	},
 	{
@@ -116,6 +137,7 @@ export const BOOKMARKS: PrototypeBookmark[] = [
 		favorite: false,
 		createdAt: '2026-09-03T11:15:00Z',
 		imageId: 'm5',
+		folderId: 'f7',
 		tags: ['ui', 'svelte']
 	},
 	{
@@ -126,6 +148,7 @@ export const BOOKMARKS: PrototypeBookmark[] = [
 		favorite: false,
 		createdAt: '2026-08-28T10:00:00Z',
 		imageId: null,
+		folderId: 'f4',
 		tags: ['db']
 	},
 	{
@@ -136,6 +159,7 @@ export const BOOKMARKS: PrototypeBookmark[] = [
 		favorite: false,
 		createdAt: '2026-08-21T08:45:00Z',
 		imageId: null,
+		folderId: 'f3',
 		tags: ['security', 'qa']
 	},
 	{
@@ -146,7 +170,52 @@ export const BOOKMARKS: PrototypeBookmark[] = [
 		favorite: false,
 		createdAt: '2026-08-15T13:25:00Z',
 		imageId: 'm2',
+		folderId: 'f4',
 		tags: ['db']
+	},
+	{
+		id: 'b9',
+		title: 'Playwright — Locators',
+		url: 'https://playwright.dev/docs/locators',
+		description: 'getByRole, getByLabel, and chaining locators.',
+		favorite: false,
+		createdAt: '2026-08-12T09:00:00Z',
+		imageId: null,
+		folderId: 'f2',
+		tags: ['qa', 'testing']
+	},
+	{
+		id: 'b10',
+		title: 'GitHub Actions — Workflow syntax',
+		url: 'https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax',
+		description: 'Jobs, steps, triggers, and expressions reference.',
+		favorite: false,
+		createdAt: '2026-08-08T15:30:00Z',
+		imageId: null,
+		folderId: 'f6',
+		tags: ['devops', 'ci']
+	},
+	{
+		id: 'b11',
+		title: 'Docker Docs — Compose file reference',
+		url: 'https://docs.docker.com/reference/compose-file/',
+		description: 'Service, network, and volume definitions.',
+		favorite: false,
+		createdAt: '2026-08-04T11:10:00Z',
+		imageId: null,
+		folderId: 'f5',
+		tags: ['devops', 'infra']
+	},
+	{
+		id: 'b12',
+		title: 'TestRail — Test case design best practices',
+		url: 'https://www.gurock.com/testrail/test-management/test-case-best-practices',
+		description: 'Coverage, traceability, and reusable steps.',
+		favorite: false,
+		createdAt: '2026-07-29T08:20:00Z',
+		imageId: null,
+		folderId: 'f3',
+		tags: ['qa', 'manual']
 	}
 ];
 
@@ -159,14 +228,16 @@ export function filterBookmarks(
 	q: string,
 	favorite: boolean,
 	tag: string,
-	sort: SortKey
+	sort: SortKey,
+	folderIds: Set<string> | null
 ): PrototypeBookmark[] {
 	const query = q.trim().toLowerCase();
 	const out = bookmarks.filter(
 		(b) =>
 			(!query || b.title.toLowerCase().includes(query) || b.url.toLowerCase().includes(query)) &&
 			(!favorite || b.favorite) &&
-			(tag === 'all' || b.tags.includes(tag))
+			(tag === 'all' || b.tags.includes(tag)) &&
+			(!folderIds || (b.folderId !== null && folderIds.has(b.folderId)))
 	);
 	return out.sort((a, b) =>
 		sort === 'title' ? a.title.localeCompare(b.title) : b.createdAt.localeCompare(a.createdAt)
@@ -190,6 +261,50 @@ export function hostname(url: string): string {
 	} catch {
 		return url;
 	}
+}
+
+export function folderPath(folders: PrototypeFolder[], id: string): PrototypeFolder[] {
+	const path: PrototypeFolder[] = [];
+	let current: PrototypeFolder | undefined = folders.find((f) => f.id === id);
+	while (current) {
+		path.unshift(current);
+		const parentId: string | null = current.parentId;
+		current = parentId ? folders.find((f) => f.id === parentId) : undefined;
+	}
+	return path;
+}
+
+export function folderLabel(folders: PrototypeFolder[], id: string): string {
+	return folderPath(folders, id)
+		.map((f) => f.name)
+		.join(' / ');
+}
+
+export function folderIdsWithDescendants(folders: PrototypeFolder[], id: string): Set<string> {
+	const ids = new Set<string>([id]);
+	let grew = true;
+	while (grew) {
+		grew = false;
+		for (const f of folders) {
+			if (f.parentId && ids.has(f.parentId) && !ids.has(f.id)) {
+				ids.add(f.id);
+				grew = true;
+			}
+		}
+	}
+	return ids;
+}
+
+export function folderCounts(
+	bookmarks: PrototypeBookmark[],
+	folders: PrototypeFolder[]
+): Record<string, number> {
+	const counts: Record<string, number> = { all: bookmarks.length };
+	for (const f of folders) {
+		const ids = folderIdsWithDescendants(folders, f.id);
+		counts[f.id] = bookmarks.filter((b) => b.folderId && ids.has(b.folderId)).length;
+	}
+	return counts;
 }
 
 export function formatBytes(bytes: number): string {

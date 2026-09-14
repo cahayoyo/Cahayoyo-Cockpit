@@ -10,6 +10,7 @@
 	import { Input } from '$lib/components/ui/input/index.js';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import { cn } from '$lib/utils.js';
+	import type { Snippet } from 'svelte';
 
 	const VIEWS = [
 		{ key: 'grid', label: 'Grid view', icon: LayoutGrid },
@@ -27,7 +28,8 @@
 		count,
 		onnew,
 		onview,
-		onreset
+		onreset,
+		folderFilter
 	}: {
 		q?: string;
 		favorite?: boolean;
@@ -39,6 +41,7 @@
 		onnew: () => void;
 		onview: (view: string) => void;
 		onreset: () => void;
+		folderFilter?: Snippet;
 	} = $props();
 
 	const tagLabel = $derived(tag === 'all' ? 'All tags' : tag);
@@ -80,6 +83,8 @@
 				{/each}
 			</Select.Content>
 		</Select.Root>
+
+		{@render folderFilter?.()}
 
 		<Select.Root type="single" bind:value={sort}>
 			<Select.Trigger class="min-w-36" aria-label="Sort bookmarks">{sortLabel}</Select.Trigger>
