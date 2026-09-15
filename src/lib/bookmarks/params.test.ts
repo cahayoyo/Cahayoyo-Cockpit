@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import type { BookmarkFilters } from './filters';
 import { ROOT_FOLDER_ID } from './filters';
-import { parseBookmarkSearch } from './params';
+import { buildBookmarkSearch, parseBookmarkSearch, parseBookmarkView } from './params';
 
 const FOLDER_ID = '3f2504e0-4f89-41d3-9a0c-0305e82c3301';
 
@@ -59,5 +59,41 @@ describe('parseBookmarkSearch', () => {
 			q: 'docs',
 			folderId: FOLDER_ID
 		});
+	});
+});
+
+describe('parseBookmarkView', () => {
+	test('accepts the two known views', () => {
+		expect(parseBookmarkView(new URLSearchParams('view=grid'))).toBe('grid');
+		expect(parseBookmarkView(new URLSearchParams('view=list'))).toBe('list');
+	});
+
+	test('degrades to grid for missing or unknown values', () => {
+		expect(parseBookmarkView(new URLSearchParams(''))).toBe('grid');
+		expect(parseBookmarkView(new URLSearchParams('view=editorial'))).toBe('grid');
+	});
+});
+
+describe('buildBookmarkSearch', () => {
+	test('omits every default so the URL stays clean', () => {
+		expect(buildBookmarkSearch(defaults, 'grid')).toBe('');
+	});
+
+	test('round-trips a fully-populated filter set', () => {
+		const filters: BookmarkFilters = {
+			q: 'drizzle docs',
+			favorite: true,
+			tag: 'db',
+			sort: 'title',
+			folderId: FOLDER_ID
+		};
+		const query = buildBookmarkSearch(filters, 'list');
+		expect(parseBookmarkSearch(new URLSearchParams(query))).toEqual(filters);
+		expect(query).toContain('view=list');
+	});
+
+	test('escapes values that need encoding', () => {
+		const query = buildBookmarkSearch({ ...defaults, q: 'a&b=c' }, 'grid');
+		expect(parseBookmarkSearch(new URLSearchParams(query)).q).toBe('a&b=c');
 	});
 });
