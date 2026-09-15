@@ -63,7 +63,9 @@
 	}
 
 	function startCreate(parentId: string): void {
-		if (parentId !== ROOT_FOLDER_ID) expanded.add(parentId);
+		// The create input renders inside the node's children list, so the parent
+		// (including the root) must be open for it to be reachable.
+		expanded.add(parentId);
 		draft = '';
 		editing = { parentId, id: null };
 	}
