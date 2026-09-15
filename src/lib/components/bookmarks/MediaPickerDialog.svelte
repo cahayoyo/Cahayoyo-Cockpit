@@ -12,6 +12,7 @@
 	import { validateUpload } from '$lib/bookmarks/upload.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
+	import ConfirmDialog from './ConfirmDialog.svelte';
 	import ImageCropDialog from './ImageCropDialog.svelte';
 	import type { MediaItem } from './types.js';
 
@@ -30,6 +31,8 @@
 	let error = $state('');
 	let cropFile = $state<File | null>(null);
 	let cropOpen = $state(false);
+	let deleting = $state<MediaItem | null>(null);
+	let deleteOpen = $state(false);
 	let uploadInput: HTMLInputElement;
 	let uploadForm: HTMLFormElement;
 
@@ -46,6 +49,11 @@
 
 		cropFile = file;
 		cropOpen = true;
+	}
+
+	function askDelete(item: MediaItem): void {
+		deleting = item;
+		deleteOpen = true;
 	}
 
 	function upload(cropped: { blob: Blob; name: string }): void {
@@ -122,35 +130,20 @@
 									: ' unused'}
 							</p>
 						</div>
-						<form
-							method="post"
-							action="?/deleteMedia"
-							use:enhance={() =>
-								async ({ result, update }) => {
-									if (result.type === 'failure') {
-										toast.error(failureMessage(result.data));
-										return;
-									}
-
-									await update();
-									toast.success('Image deleted');
-								}}
+						<Button
+							type="button"
+							variant="ghost"
+							size="icon-xs"
+							class="text-destructive max-lg:size-9"
+							disabled={item.usageCount > 0}
+							aria-label="Delete {item.originalName}"
+							title={item.usageCount > 0
+								? 'Cannot delete while bookmarks use this image'
+								: 'Delete image'}
+							onclick={() => askDelete(item)}
 						>
-							<input type="hidden" name="id" value={item.id} />
-							<Button
-								type="submit"
-								variant="ghost"
-								size="icon-xs"
-								class="text-destructive max-lg:size-9"
-								disabled={item.usageCount > 0}
-								aria-label="Delete {item.originalName}"
-								title={item.usageCount > 0
-									? 'Cannot delete while bookmarks use this image'
-									: 'Delete image'}
-							>
-								<Trash2 class="size-3.5" />
-							</Button>
-						</form>
+							<Trash2 class="size-3.5" />
+						</Button>
 					</div>
 				</div>
 			{/each}
@@ -184,5 +177,16 @@
 		</form>
 
 		<ImageCropDialog bind:open={cropOpen} file={cropFile} oncrop={upload} />
+
+		<ConfirmDialog
+			bind:open={deleteOpen}
+			title="Delete image"
+			description={deleting ? `"${deleting.originalName}" will be removed from the library.` : ''}
+			confirmLabel="Delete image"
+			action="?/deleteMedia"
+			fields={deleting ? { id: deleting.id } : {}}
+			successMessage="Image deleted"
+			onsuccess={() => (deleting = null)}
+		/>
 	</Dialog.Content>
 </Dialog.Root>
