@@ -31,3 +31,6 @@ vite.config.ts.timestamp-*
 # Local tooling output (graphify, codegraph)
 /graphify-out/
 /.codegraph/
+
+# Local media uploads (UPLOAD_DIR default)
+/data/

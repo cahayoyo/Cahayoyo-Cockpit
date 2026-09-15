@@ -22,6 +22,13 @@
       "when": 1789307030929,
       "tag": "0002_rainy_star_brand",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1789407188131,
+      "tag": "0003_fuzzy_blink",
+      "breakpoints": true
     }
   ]
 }
